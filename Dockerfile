@@ -4,6 +4,8 @@ FROM openjdk:21-jdk-slim
 # Diretório de trabalho
 WORKDIR /app
 
+RUN apk add maven
+
 # Copie o arquivo JAR do projeto
 COPY target/softskills-0.0.1-SNAPSHOT.jar app.jar
 
