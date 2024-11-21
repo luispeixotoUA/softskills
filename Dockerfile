@@ -1,16 +1,26 @@
-# Use uma imagem base do OpenJDK 21
-FROM openjdk:21-jdk-slim
+# Etapa 1: Construir o JAR
+FROM maven:3.9.4-eclipse-temurin-21 as builder
 
-# Diretório de trabalho
+# Diretório de trabalho para o Maven
 WORKDIR /app
 
-RUN apk add maven
+# Copiar o projeto inteiro para o container
+COPY . .
 
-# Copie o arquivo JAR do projeto
-COPY target/softskills-0.0.1-SNAPSHOT.jar app.jar
+# Executar o Maven para construir o JAR
+RUN mvn clean package -DskipTests
 
-# Exponha a porta usada pela aplicação
+# Etapa 2: Executar a aplicação
+FROM openjdk:21-jdk-slim
+
+# Diretório de trabalho para o runtime
+WORKDIR /app
+
+# Copiar o JAR gerado da etapa anterior
+COPY --from=builder /app/target/softskills-0.0.1-SNAPSHOT.jar app.jar
+
+# Expor a porta para o Render
 EXPOSE 8080
 
-# Comando para rodar a aplicação
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Passar a variável PORT para o Spring Boot
+ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=${PORT}"]
