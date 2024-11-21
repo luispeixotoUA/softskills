@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: softskills
+    ports:
+      - "8443:8443"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/softskills_db
+      - SPRING_DATASOURCE_USERNAME=softskills_db
+      - SPRING_DATASOURCE_PASSWORD=uWHgaXXQ6BttmSZ2zwKzCJyYNzRVZi2mwgVfhNMQ
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: softskills_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: softskills_db
+      POSTGRES_USER: softskills_user
+      POSTGRES_PASSWORD: uWHgaXXQ6BttmSZ2zwKzCJyYNzRVZi2mwgVfhNMQ
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
