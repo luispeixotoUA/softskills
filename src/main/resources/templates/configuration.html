@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração da Atividade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-blue-50 via-gray-50 to-blue-100 min-h-screen flex items-center justify-center p-8">
+
+<!-- Container Principal -->
+<div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-6xl">
+    <!-- Cabeçalho com Logo -->
+    <!-- URL de Informação -->
+    <div class="mb-4">
+        <label for="activity_info_url" class="block text-lg font-semibold text-gray-700 mb-2">URL de Informação:</label>
+        <textarea id="activity_info_url" name="activity_info_url" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="Digite a URL"></textarea>
+    </div>
+
+    <!-- Questões de Escolha Múltipla -->
+    <div class="space-y-6">
+        <!-- Questão 1 -->
+        <div>
+            <label for="question_1" class="block font-medium text-gray-700">Questão 1:</label>
+            <textarea id="question_1" name="question_1" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="Digite a questão 1"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-6">
+            <div>
+                <label for="question_1_option_1" class="block font-medium text-gray-700">Opção 1:</label>
+                <textarea id="question_1_option_1" name="question_1_option_1" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
+            </div>
+            <div>
+                <label for="question_1_option_2" class="block font-medium text-gray-700">Opção 2:</label>
+                <textarea id="question_1_option_2" name="question_1_option_2" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-6">
+            <div>
+                <label for="question_1_option_3" class="block font-medium text-gray-700">Opção 3:</label>
+                <textarea id="question_1_option_3" name="question_1_option_3" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
+            </div>
+            <div>
+                <label for="question_1_option_4" class="block font-medium text-gray-700">Opção 4:</label>
+                <textarea id="question_1_option_4" name="question_1_option_4" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
+            </div>
+        </div>
+        <div>
+            <label for="question_1_correct_answer" class="block font-medium text-gray-700">Resposta Correta (1-4):</label>
+            <input type="number" id="question_1_correct_answer" name="question_1_correct_answer" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none" min="1" max="4" placeholder="Digite o número da resposta correta">
+        </div>
+    </div>
+
+    <!-- Recompensas -->
+    <div>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Recompensas</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="reward_level_1" class="block font-medium text-gray-700">Recompensa Nível 1:</label>
+                <textarea id="reward_level_1" name="reward_level_1" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
+            </div>
+            <div>
+                <label for="reward_level_2" class="block font-medium text-gray-700">Recompensa Nível 2:</label>
+                <textarea id="reward_level_2" name="reward_level_2" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificado -->
+    <div>
+        <label for="certificate_url" class="block font-medium text-gray-700">URL do Certificado:</label>
+        <textarea id="certificate_url" name="certificate_url" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="Digite a URL do certificado"></textarea>
+    </div>
+
+    <!-- Feedback e Suporte -->
+    <div>
+        <label for="feedback_material_intermediate" class="block font-medium text-gray-700">Feedback Material Intermediário:</label>
+        <textarea id="feedback_material_intermediate" name="feedback_material_intermediate" rows="3" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="Digite o material de feedback"></textarea>
+    </div>
+    <div>
+        <label for="support_material_repeat" class="block font-medium text-gray-700">Material de Suporte para Repetição:</label>
+        <textarea id="support_material_repeat" name="support_material_repeat" rows="3" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-400 focus:outline-none" placeholder="Digite o material de suporte"></textarea>
+    </div>
+
+    <!-- Exibir Link com URL gerado -->
+    <div id="generated-link" class="mt-8 hidden">
+        <p class="text-lg font-semibold text-gray-700">Link gerado para envio do pedido:</p>
+        <a id="link-to-send" href="" target="_blank" class="text-blue-600 hover:underline">Clique aqui para testar</a>
+    </div>
+</div>
+
+<script>
+    // Lidar com o submit do formulário
+    document.getElementById("config-form").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevenir o envio do formulário
+
+        // Coletar os dados do formulário
+        const formData = new FormData(this);
+
+        // Construir a URL com os dados do formulário
+        const urlParams = new URLSearchParams();
+
+        formData.forEach((value, key) => {
+            urlParams.append(key, value);
+        });
+
+        // Definir a URL para enviar
+        const baseURL = "http://<domínio>/deploy-atividade";  // Altere para o seu endpoint
+        const fullURL = `${baseURL}?${urlParams.toString()}`;
+
+        // Exibir o link gerado
+        const linkElement = document.getElementById("link-to-send");
+        linkElement.href = fullURL;
+        linkElement.textContent = fullURL;
+
+        // Mostrar a área com o link gerado
+        document.getElementById("generated-link").classList.remove("hidden");
+    });
+</script>
+
+</body>
+</html>
