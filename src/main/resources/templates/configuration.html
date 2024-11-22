@@ -88,34 +88,5 @@
     </div>
 </div>
 
-<script>
-    // Lidar com o submit do formulário
-    document.getElementById("config-form").addEventListener("submit", function(event) {
-        event.preventDefault();  // Prevenir o envio do formulário
-
-        // Coletar os dados do formulário
-        const formData = new FormData(this);
-
-        // Construir a URL com os dados do formulário
-        const urlParams = new URLSearchParams();
-
-        formData.forEach((value, key) => {
-            urlParams.append(key, value);
-        });
-
-        // Definir a URL para enviar
-        const baseURL = "http://<domínio>/deploy-atividade";  // Altere para o seu endpoint
-        const fullURL = `${baseURL}?${urlParams.toString()}`;
-
-        // Exibir o link gerado
-        const linkElement = document.getElementById("link-to-send");
-        linkElement.href = fullURL;
-        linkElement.textContent = fullURL;
-
-        // Mostrar a área com o link gerado
-        document.getElementById("generated-link").classList.remove("hidden");
-    });
-</script>
-
 </body>
 </html>
