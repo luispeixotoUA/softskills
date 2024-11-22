@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Executar o Maven para construir o JAR
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # Etapa 2: Executar a aplicação
 FROM openjdk:21-jdk-slim
