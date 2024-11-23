@@ -18,11 +18,11 @@ public class ActivityService {
     public Map<String, Object> getActivityRegistration() {
         Map<String, Object> activity = new LinkedHashMap<>();
         activity.put("name", "SoftSk!lls");
-        activity.put("config_url", baseUrl + "/configuracao-atividade.html");
-        activity.put("json_params_url", baseUrl + "/json-params-atividade");
-        activity.put("user_url", baseUrl + "/deploy-atividade");
-        activity.put("analytics_url", baseUrl + "/analytics-atividade");
-        activity.put("analytics_list_url", baseUrl + "/lista-analytics-atividade");
+        activity.put("config_url", baseUrl + "/config-activity");
+        activity.put("json_params_url", baseUrl + "/json-params-activity");
+        activity.put("user_url", baseUrl + "/deploy-activity/123");
+        activity.put("analytics_url", baseUrl + "/analytics/activity");
+        activity.put("analytics_list_url", baseUrl + "/analytics/analytics-list");
 
         return activity;
     }
