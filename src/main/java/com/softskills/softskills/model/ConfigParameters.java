@@ -1,4 +1,4 @@
-package com.softskills.softskills.entity;
+package com.softskills.softskills.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
