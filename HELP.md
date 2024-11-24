@@ -7,7 +7,14 @@ Todo o código fonte também está disponível no [GitHub](https://github.com/lu
 
 ##  URL dos Pedidos Inven!RA:
 ```
-
+{
+    "name": "SoftSk!lls",
+    "config_url": "https://softskills.onrender.com/config-activity",
+    "json_params_url": "https://softskills.onrender.com/json-params-activity",
+    "user_url": "https://softskills.onrender.com/deploy-activity/123",
+    "analytics_url": "https://softskills.onrender.com/analytics/activity",
+    "analytics_list_url": "https://softskills.onrender.com/analytics/analytics-list"
+}
 ```
 
 ### **1. Registro da Atividade**
