@@ -1,5 +1,6 @@
 package com.softskills.softskills.service;
 
+import com.softskills.softskills.model.ActivityRequest;
 import com.softskills.softskills.utils.ConfigParamsUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,27 +36,14 @@ public class ActivityService {
 
     // Método para gerar o URL da atividade
     public String generateActivityUrl(String activityId) {
-        // Aqui, você pode construir o URL baseado no activityId
         String urlActivity = baseUrl + "/deploy_ativity";
         return urlActivity + "/" + activityId;
     }
 
-    // Método para gerar o URL do deploy da atividade
-    public String generateDeployUrl(String activityID, String studentID, Map<String, Object> jsonParams) {
-        // Criar o URL de deploy para a atividade usando o ID da atividade e do estudante
-        String deployUrl = baseUrl + "/atividade/" + activityID;
-
-        // Adiciona os parâmetros da atividade à URL (se houver algum parâmetro extra)
-        StringBuilder urlBuilder = new StringBuilder(deployUrl);
-        urlBuilder.append("?studentId=").append(studentID);
-
-        // Convertendo os parâmetros JSON para um formato de query string simples
-        if (jsonParams != null && !jsonParams.isEmpty()) {
-            jsonParams.forEach((key, value) -> urlBuilder.append("&")
-                    .append(key).append("=").append(value));
-        }
-
-        return urlBuilder.toString(); // Retorna a URL com os parâmetros de configuração
+    // Endpoint para o deploy de uma atividade
+    public String provideActivity(ActivityRequest activityRequest) {
+        String activityUrl = baseUrl + "/activity/" + activityRequest.getActivityID() + "?studentID=" + activityRequest.getInvenIRAstdID();
+        return activityUrl;
     }
 
 

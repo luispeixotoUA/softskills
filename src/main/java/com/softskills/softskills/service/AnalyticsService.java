@@ -12,23 +12,29 @@ import java.util.Map;
 @Service
 public class AnalyticsService {
 
-    public List<Map<String, String>> getAnalyticsList() {
-        List<Map<String, String>> analyticsList = new ArrayList<>();
+    public Map<String, List<Map<String, String>>> getAnalyticsList() {
+        Map<String, List<Map<String, String>>> analyticsList = new HashMap<>();
 
-        // Adicionando analytics quantitativos
-        addAnalytics(analyticsList, "accessed_activity", "boolean");
-        addAnalytics(analyticsList, "activity_completion_time", "integer");
-        addAnalytics(analyticsList, "correct_answers_quiz", "integer");
-        addAnalytics(analyticsList, "incorrect_answers_quiz", "integer");
-        addAnalytics(analyticsList, "accuracy_percentage", "number");
-        addAnalytics(analyticsList, "reward_level_achieved", "integer");
-        addAnalytics(analyticsList, "reaction_time", "integer");
-        addAnalytics(analyticsList, "feedback_received", "boolean");
-        addAnalytics(analyticsList, "certificate_issued", "boolean");
+        // Lista de analytics qualitativos
+        List<Map<String, String>> qualAnalytics = new ArrayList<>();
+        addAnalytics(qualAnalytics, "access_info_before_answering", "boolean");
+        addAnalytics(qualAnalytics, "participation_in_quiz", "boolean");
 
-        // Adicionando analytics qualitativos
-        addAnalytics(analyticsList, "access_info_before_answering", "boolean");
-        addAnalytics(analyticsList, "participation_in_quiz", "boolean");
+        // Lista de analytics quantitativos
+        List<Map<String, String>> quantAnalytics = new ArrayList<>();
+        addAnalytics(quantAnalytics, "accessed_activity", "boolean");
+        addAnalytics(quantAnalytics, "activity_completion_time", "integer");
+        addAnalytics(quantAnalytics, "correct_answers_quiz", "integer");
+        addAnalytics(quantAnalytics, "incorrect_answers_quiz", "integer");
+        addAnalytics(quantAnalytics, "accuracy_percentage", "number");
+        addAnalytics(quantAnalytics, "reward_level_achieved", "integer");
+        addAnalytics(quantAnalytics, "reaction_time", "integer");
+        addAnalytics(quantAnalytics, "feedback_received", "boolean");
+        addAnalytics(quantAnalytics, "certificate_issued", "boolean");
+
+        // Adiciona as listas ao mapa
+        analyticsList.put("qualAnalytics", qualAnalytics);
+        analyticsList.put("quantAnalytics", quantAnalytics);
 
         return analyticsList;
     }

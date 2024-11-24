@@ -17,7 +17,7 @@ public class AnalyticsController {
 
     // Endpoint para obter a lista de analytics da atividade
     @GetMapping("/analytics-list")
-    public List<Map<String, String>> getAnalyticsList() {
+    public Map<String, List<Map<String,String>>> getAnalyticsList() {
         return analyticsService.getAnalyticsList();
     }
 

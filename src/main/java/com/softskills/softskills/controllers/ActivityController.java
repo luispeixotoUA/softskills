@@ -15,7 +15,7 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
-    // Endpoint para o ficheiro de registo de uma atividade
+    // Endpoint para obter URLS necessários para o registro de atividades
     @GetMapping("/register-activity")
     public Map<String, Object> getActivityRegistration() {
         return activityService.getActivityRegistration();
@@ -30,21 +30,14 @@ public class ActivityController {
     // Endpoint para o deploy de uma atividade
     @GetMapping("/deploy-activity/{activityId}")
     public String deployActivity(@PathVariable String activityId) {
-        // Chama o serviço para gerar o URL para a atividade
         String activityUrl = activityService.generateActivityUrl(activityId);
-        return activityUrl; // Retorna o URL para onde os alunos serão redirecionados
+        return activityUrl;
     }
 
     // Endpoint para o deploy de uma atividade
     @PostMapping("/provide-activity")
     public ResponseEntity<String> provideActivity(@RequestBody ActivityRequest activityRequest) {
-        // Aqui você pode validar e processar os parâmetros, mas por enquanto só vai retornar uma resposta genérica
-        // Isso pode ser ajustado mais tarde quando a segunda fase estiver implementada
-
-        // O endpoint só vai retornar um URL fictício por enquanto
-        String activityUrl = "http://activityprovider.com/activity/" + activityRequest.getActivityID() + "?studentID=" + activityRequest.getInvenIRAstdID();
-
-        // A resposta pode ser personalizada conforme o que será necessário no futuro
-        return ResponseEntity.ok(activityUrl);
+        String activityUrl = activityService.provideActivity(activityRequest);
+        return ResponseEntity.ok().body(activityUrl);
     }
 }
