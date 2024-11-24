@@ -1,0 +1,255 @@
+openapi: 3.0.1
+info:
+  title: SoftSk!lls Activity Provider
+  description: Activity Provider para a plataforma Inven!RA, que permite o registo, configuração, deploy, fornecimento e análise de atividades.
+  version: 1.0.0
+servers:
+  - url: https://softskills.onrender.com
+    description: Servidor de Produção
+  - url: http://localhost:8080
+    description: Servidor Local
+
+tags:
+  - name: Atividades
+    description: Endpoints gerais para registo, configuração, deploy e fornecimento de atividades
+  - name: Configuração
+    description: Endpoints para configurar e obter parâmetros da atividade
+  - name: Deploy
+    description: Endpoints relacionados ao deploy da atividade
+  - name: Analytics
+    description: Endpoints para obter e listar dados analíticos das atividades
+
+paths:
+  /register-activity:
+    get:
+      summary: Registro da atividade
+      description: Retorna os dados principais da atividade, como URLs de configuração, parâmetros e endpoints de analytics.
+      tags:
+        - Atividades
+      responses:
+        '200':
+          description: Atividade registrada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: SoftSk!lls
+                  config_url:
+                    type: string
+                    example: https://softskills.onrender.com/config-activity
+                  json_params_url:
+                    type: string
+                    example: https://softskills.onrender.com/json-params-activity
+                  user_url:
+                    type: string
+                    example: https://softskills.onrender.com/deploy-activity/123
+                  analytics_url:
+                    type: string
+                    example: https://softskills.onrender.com/analytics/activity
+                  analytics_list_url:
+                    type: string
+                    example: https://softskills.onrender.com/analytics/analytics-list
+
+  /config-activity:
+    get:
+      summary: Página de configuração da atividade
+      description: Retorna a página HTML para configurar a atividade, embutida na interface da plataforma Inven!RA.
+      tags:
+        - Configuração
+      responses:
+        '200':
+          description: Página de configuração carregada com sucesso
+          content:
+            text/html:
+              schema:
+                type: string
+                example: |
+                  <!DOCTYPE html>
+                  <html lang="pt">
+                  <head>...</head>
+                  <body>...</body>
+                  </html>
+
+  /json-params-activity:
+    get:
+      summary: Lista de parâmetros de configuração
+      description: Retorna uma lista JSON com os parâmetros que podem ser configurados na página de configuração da atividade.
+      tags:
+        - Configuração
+      responses:
+        '200':
+          description: Lista de parâmetros retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    type:
+                      type: string
+                example:
+                  - name: activity_info_url
+                    type: url
+                  - name: question_1
+                    type: text/plain
+                  - name: question_1_option_1
+                    type: text/plain
+                  - name: reward_level_1
+                    type: text/plain
+
+  /deploy-activity/{activityId}:
+    get:
+      summary: Deploy da atividade
+      description: Gera o URL para acessar a atividade, passando o ID da atividade.
+      tags:
+        - Deploy
+      parameters:
+        - in: path
+          name: activityId
+          required: true
+          schema:
+            type: string
+            example: "12345"
+          description: O ID da instância da atividade na Inven!RA
+      responses:
+        '200':
+          description: URL gerado com sucesso
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "https://softskills.onrender.com/deploy_ativity/12345"
+
+  /provide-activity:
+    post:
+      summary: Fornece a atividade
+      description: Fornece a URL para o redirecionamento do aluno, com o ID de atividade e do estudante/formando.
+      tags:
+        - Deploy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                activityID:
+                  type: string
+                  example: "12345"
+                Inven!RAstdID:
+                  type: string
+                  example: "67890"
+                json_params:
+                  type: object
+                  properties:
+                    s1:
+                      type: string
+                      example: "abc"
+                    s2:
+                      type: string
+                      example: "def"
+      responses:
+        '200':
+          description: URL de redirecionamento fornecido com sucesso
+          content:
+            application/json:
+              schema:
+                type: string
+                example: http://activityprovider.com/activity/12345?studentID=67890
+
+  /analytics/analytics-list:
+    get:
+      summary: Lista de Analytics da Atividade
+      description: Retorna uma lista dos analytics disponíveis para a atividade, com base no ficheiro de registo.
+      tags:
+        - Analytics
+      responses:
+        '200':
+          description: Lista de analytics retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  qualAnalytics:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: "Analytic 1"
+                        type:
+                          type: string
+                          example: "text/plain"
+                  quantAnalytics:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: "Analytic 3"
+                        type:
+                          type: string
+                          example: "boolean"
+
+  /analytics/activity:
+    post:
+      summary: Obter os Analytics de uma Atividade
+      description: Retorna os dados analíticos dos alunos para uma atividade específica, com base no ID da atividade.
+      tags:
+        - Analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                activityID:
+                  type: string
+                  example: "activity-12345"
+      responses:
+        '200':
+          description: Dados analíticos retornados com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    inveniraStdID:
+                      type: string
+                      example: "1001"
+                    quantAnalytics:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                          example:
+                            name: "accessed_activity"
+                            value: true
+                    qualAnalytics:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                          example:
+                            name: "Student activity profile"
+                            value: "https://ActivityProvider/?APAnID=11111111"

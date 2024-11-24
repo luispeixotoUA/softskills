@@ -1,53 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoftSkills - Activity Provider</title>
+    <title>SoftSk!lls - Activity Provider</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
 </head>
-<body class="bg-gradient-to-b from-blue-50 via-gray-50 to-blue-100 flex items-center justify-center min-h-screen">
+<body class="bg-gradient-to-b from-gray-100 via-gray-200 to-gray-300 flex items-center justify-center min-h-screen">
 
-<!-- Main Container -->
-<div class="bg-white shadow-xl rounded-xl p-10 max-w-3xl w-full text-center">
-    <!-- Logo -->
-    <div class="flex justify-center mb-8">
-        <img src="softskills.png" alt="SoftSkills Logo" class="w-80">
-    </div>
-
-    <!-- Title -->
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-2">
-        Welcome to SoftSkills
+<div class="bg-white shadow-lg rounded-lg p-6 max-w-4xl w-full">
+    <!-- Título -->
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">
+        SoftSk!lls - Activity Provider
     </h1>
-    <h2 class="text-lg font-semibold text-blue-600 mb-6 tracking-wide">
-        Empowering Growth through Activities
-    </h2>
-
-    <!-- Divider -->
-    <div class="border-t-2 border-gray-200 w-2/3 mx-auto mb-6"></div>
-
-    <!-- Content -->
-    <p class="text-gray-600 text-lg leading-relaxed">
-        Discover engaging activities that help you enhance your skills while earning rewards.
-        Our platform is designed to inspire growth, learning, and achievement.
+    <p class="text-center text-gray-600 mb-6">
+        Activity Provider for the Inven!RA Platform
     </p>
 
-    <!-- Call to Action -->
-    <div class="mt-8 flex justify-center space-x-4">
-        <a href="/activities"
-           class="px-8 py-3 bg-blue-500 text-white font-bold text-lg rounded-lg shadow-md hover:bg-blue-600 transition">
-            Explore Activities
-        </a>
-        <a href="/about"
-           class="px-8 py-3 border-2 border-blue-500 text-blue-500 font-bold text-lg rounded-lg hover:bg-blue-50 transition">
-            Learn More
-        </a>
+    <!-- Informações principais -->
+    <div class="mb-4">
+        <p class="text-gray-700">
+            <strong>Nome do Activity Provider:</strong> SoftSk!lls
+        </p>
+        <p class="text-gray-700">
+            <strong>Hospedagem em:</strong> <a href="http://render.com" class="text-blue-600 underline">http://render.com</a>
+        </p>
+        <p class="text-gray-700">
+            <strong>URL do Activity Provider:</strong> <a href="https://softskills.onrender.com" class="text-blue-600 underline">https://softskills.onrender.com</a>
+        </p>
+    </div>
+
+    <!-- URLs dos Pedidos Inven!RA -->
+    <div class="bg-gray-100 p-4 rounded-md text-sm">
+        <p class="text-gray-800 font-semibold">URLs dos Pedidos Inven!RA:</p>
+        <pre class="bg-gray-50 p-4 rounded-md text-sm overflow-x-auto mt-2 text-gray-700">
+{
+    "name": "SoftSk!lls",
+    "config_url": "https://softskills.onrender.com/config-activity",
+    "json_params_url": "https://softskills.onrender.com/json-params-activity",
+    "user_url": "https://softskills.onrender.com/deploy-activity/123",
+    "analytics_url": "https://softskills.onrender.com/analytics/activity",
+    "analytics_list_url": "https://softskills.onrender.com/analytics/analytics-list"
+}
+        </pre>
+    </div>
+
+    <!-- Informações Acadêmicas -->
+    <div class="mt-6">
+        <p class="text-gray-700">
+            <strong>Universidade Aberta:</strong> Mestrado em Engenharia Informática e Tecnologia Web
+        </p>
+        <p class="text-gray-700">
+            <strong>Unidade Curricular:</strong> Arquitetura e Padrões de Software 2024
+        </p>
+    </div>
+
+    <!-- Informação do aluno -->
+    <div class="mt-6">
+        <p class="text-gray-700">
+            <strong>Aluno:</strong> Luís Peixoto
+        </p>
+        <p class="text-gray-700">
+            <strong>Número:</strong> 2402741
+        </p>
     </div>
 </div>
 
