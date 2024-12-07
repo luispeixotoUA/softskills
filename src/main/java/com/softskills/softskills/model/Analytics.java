@@ -1,49 +1,85 @@
 package com.softskills.softskills.model;
 
+import jakarta.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "analytics_data")
 public class Analytics {
 
-    private String inveniraStdID; // ID do aluno na Inven!RA
-    private List<AnalyticsField> quantAnalytics; // Dados quantitativos
-    private List<AnalyticsField> qualAnalytics; // Dados qualitativos
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Analytics(String inveniraStdID, List<AnalyticsField> quantAnalytics, List<AnalyticsField> qualAnalytics) {
-        this.inveniraStdID = inveniraStdID;
-        this.quantAnalytics = quantAnalytics;
-        this.qualAnalytics = qualAnalytics;
+    private String studentId;
+
+    @Column(name = "value", nullable = false)
+    private String value;
+
+    @Column(name = "analytic_id", nullable = false)
+    private Long analyticId;
+
+    private String activityId;
+
+    public Analytics() {
     }
 
-    public String getInveniraStdID() {
-        return inveniraStdID;
+    public Analytics(Long id, String studentId, String value, Long analyticId, String activityId) {
+        this.id = id;
+        this.studentId = studentId;
+        this.value = value;
+        this.analyticId = analyticId;
+        this.activityId = activityId;
     }
 
-    public void setInveniraStdID(String inveniraStdID) {
-        this.inveniraStdID = inveniraStdID;
+    public Long getId() {
+        return id;
     }
 
-    public List<AnalyticsField> getQuantAnalytics() {
-        return quantAnalytics;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setQuantAnalytics(List<AnalyticsField> quantAnalytics) {
-        this.quantAnalytics = quantAnalytics;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public List<AnalyticsField> getQualAnalytics() {
-        return qualAnalytics;
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
     }
 
-    public void setQualAnalytics(List<AnalyticsField> qualAnalytics) {
-        this.qualAnalytics = qualAnalytics;
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Long getAnalyticId() {
+        return analyticId;
+    }
+
+    public void setAnalyticId(Long analyticId) {
+        this.analyticId = analyticId;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
     }
 
     @Override
     public String toString() {
         return "Analytics{" +
-                "inveniraStdID='" + inveniraStdID + '\'' +
-                ", quantAnalytics=" + quantAnalytics +
-                ", qualAnalytics=" + qualAnalytics +
+                "id=" + id +
+                ", studentId='" + studentId + '\'' +
+                ", value='" + value + '\'' +
+                ", analyticId=" + analyticId +
+                ", activityId='" + activityId + '\'' +
                 '}';
     }
 }

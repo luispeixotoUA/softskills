@@ -1,11 +1,10 @@
-package com.softskills.softskills.model;
+package com.softskills.softskills.model.DTO;
 
-public class AnalyticsField {
-
+public class AnalyticsFieldDTO {
     private String name;
     private Object value;
 
-    public AnalyticsField(String name, Object value) {
+    public AnalyticsFieldDTO(String name, Object value) {
         this.name = name;
         this.value = value;
     }
@@ -24,13 +23,5 @@ public class AnalyticsField {
 
     public void setValue(Object value) {
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return "AnalyticsField{" +
-                "name='" + name + '\'' +
-                ", value=" + value +
-                '}';
     }
 }

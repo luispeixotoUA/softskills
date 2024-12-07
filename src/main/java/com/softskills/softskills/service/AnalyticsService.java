@@ -1,93 +1,99 @@
 package com.softskills.softskills.service;
 
 import com.softskills.softskills.model.Analytics;
-import com.softskills.softskills.model.AnalyticsField;
+import com.softskills.softskills.model.AnalyticsConfig;
+import com.softskills.softskills.model.AnalyticsListDTO;
+import com.softskills.softskills.model.DTO.AnalyticsFieldDTO;
+import com.softskills.softskills.model.DTO.AnalyticsResponseDTO;
+import com.softskills.softskills.repositories.AnalyticsConfigRepository;
+import com.softskills.softskills.repositories.AnalyticsDataRepository;
+import com.softskills.softskills.repositories.AnalyticsRepository;
+import com.softskills.softskills.utils.AnalyticsCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AnalyticsService {
 
-    public Map<String, List<Map<String, String>>> getAnalyticsList() {
-        Map<String, List<Map<String, String>>> analyticsList = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(AnalyticsService.class);
 
-        // Lista de analytics qualitativos
-        List<Map<String, String>> qualAnalytics = new ArrayList<>();
-        addAnalytics(qualAnalytics, "access_info_before_answering", "boolean");
-        addAnalytics(qualAnalytics, "participation_in_quiz", "boolean");
+    private final AnalyticsCache analyticsCache;
+    private final AnalyticsRepository analyticsRepository;
+    private final AnalyticsConfigRepository analyticsConfigRepository;
 
-        // Lista de analytics quantitativos
-        List<Map<String, String>> quantAnalytics = new ArrayList<>();
-        addAnalytics(quantAnalytics, "accessed_activity", "boolean");
-        addAnalytics(quantAnalytics, "activity_completion_time", "integer");
-        addAnalytics(quantAnalytics, "correct_answers_quiz", "integer");
-        addAnalytics(quantAnalytics, "incorrect_answers_quiz", "integer");
-        addAnalytics(quantAnalytics, "accuracy_percentage", "number");
-        addAnalytics(quantAnalytics, "reward_level_achieved", "integer");
-        addAnalytics(quantAnalytics, "reaction_time", "integer");
-        addAnalytics(quantAnalytics, "feedback_received", "boolean");
-        addAnalytics(quantAnalytics, "certificate_issued", "boolean");
+    public AnalyticsService(AnalyticsCache analyticsCache, AnalyticsRepository analyticsRepository, AnalyticsConfigRepository analyticsConfigRepository) {
+        this.analyticsCache = analyticsCache;
+        this.analyticsRepository = analyticsRepository;
+        this.analyticsConfigRepository = analyticsConfigRepository;
+    }
 
-        // Adiciona as listas ao mapa
-        analyticsList.put("qualAnalytics", qualAnalytics);
-        analyticsList.put("quantAnalytics", quantAnalytics);
-
+    public Map<String, List<AnalyticsListDTO>> getAnalyticsList() {
+        logger.info("Fetching analytics list from cache...");
+        Map<String, List<AnalyticsListDTO>> analyticsList = analyticsCache.getAnalyticsList()
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().stream()
+                                .map(map -> new AnalyticsListDTO(map.getName(), map.getType()))
+                                .collect(Collectors.toList())
+                ));
+        logger.info("Analytics list fetched: {}", analyticsList);
         return analyticsList;
     }
 
-    private void addAnalytics(List<Map<String, String>> analyticsList, String name, String type) {
-        Map<String, String> analytics = new HashMap<>();
-        analytics.put("name", name);
-        analytics.put("type", type);
-        analyticsList.add(analytics);
-    }
+    public List<AnalyticsResponseDTO> getAnalyticsByActivityId(String activityId) {
+        logger.info("Fetching analytics for activityID: {}", activityId);
 
-    public List<Analytics> getAnalyticsForActivity(String activityId) {
-        // Lista de dados analíticos para todos os estudantes
-        List<Analytics> analytics = new ArrayList<>();
+        List<Analytics> analyticsList = analyticsRepository.findByActivityId(activityId);
 
-        // Exemplo de analytics para o primeiro estudante
-        List<AnalyticsField> quantAnalytics1 = new ArrayList<>();
-        quantAnalytics1.add(new AnalyticsField("accessed_activity", true));
-        quantAnalytics1.add(new AnalyticsField("activity_completion_time", 120));
-        quantAnalytics1.add(new AnalyticsField("correct_answers_quiz", 8));
-        quantAnalytics1.add(new AnalyticsField("incorrect_answers_quiz", 2));
-        quantAnalytics1.add(new AnalyticsField("accuracy_percentage", 80));
-        quantAnalytics1.add(new AnalyticsField("reward_level_achieved", 2));
-        quantAnalytics1.add(new AnalyticsField("reaction_time", 500));
-        quantAnalytics1.add(new AnalyticsField("feedback_received", true));
-        quantAnalytics1.add(new AnalyticsField("certificate_issued", true));
+        if (analyticsList.isEmpty()) {
+            logger.warn("No analytics found for activityID: {}", activityId);
+            return Collections.emptyList();
+        }
 
-        List<AnalyticsField> qualAnalytics1 = new ArrayList<>();
-        qualAnalytics1.add(new AnalyticsField("access_info_before_answering", true));
-        qualAnalytics1.add(new AnalyticsField("participation_in_quiz", true));
+        List<AnalyticsConfig> configs = analyticsConfigRepository.findAll();
+        Map<Long, AnalyticsConfig> configMap = configs.stream()
+                .collect(Collectors.toMap(AnalyticsConfig::getId, config -> config));
 
-        Analytics student1Analytics = new Analytics("1001", quantAnalytics1, qualAnalytics1);
-        analytics.add(student1Analytics);
+        Map<String, List<Analytics>> groupedByStudent = analyticsList.stream()
+                .collect(Collectors.groupingBy(Analytics::getStudentId));
 
-        // Exemplo de analytics para o segundo estudante
-        List<AnalyticsField> quantAnalytics2 = new ArrayList<>();
-        quantAnalytics2.add(new AnalyticsField("accessed_activity", true));
-        quantAnalytics2.add(new AnalyticsField("activity_completion_time", 140));
-        quantAnalytics2.add(new AnalyticsField("correct_answers_quiz", 7));
-        quantAnalytics2.add(new AnalyticsField("incorrect_answers_quiz", 3));
-        quantAnalytics2.add(new AnalyticsField("accuracy_percentage", 70));
-        quantAnalytics2.add(new AnalyticsField("reward_level_achieved", 1));
-        quantAnalytics2.add(new AnalyticsField("reaction_time", 550));
-        quantAnalytics2.add(new AnalyticsField("feedback_received", false));
-        quantAnalytics2.add(new AnalyticsField("certificate_issued", false));
+        List<AnalyticsResponseDTO> response = groupedByStudent.entrySet().stream()
+                .map(entry -> {
+                    String studentId = entry.getKey();
+                    List<Analytics> studentAnalytics = entry.getValue();
 
-        List<AnalyticsField> qualAnalytics2 = new ArrayList<>();
-        qualAnalytics2.add(new AnalyticsField("access_info_before_answering", false));
-        qualAnalytics2.add(new AnalyticsField("participation_in_quiz", true));
+                    List<AnalyticsFieldDTO> quantAnalytics = studentAnalytics.stream()
+                            .filter(a -> {
+                                AnalyticsConfig config = configMap.get(a.getAnalyticId());
+                                return config != null && "quantitative".equalsIgnoreCase(config.getType());
+                            })
+                            .map(a -> {
+                                AnalyticsConfig config = configMap.get(a.getAnalyticId());
+                                return new AnalyticsFieldDTO(config.getName(), a.getValue());
+                            })
+                            .collect(Collectors.toList());
 
-        Analytics student2Analytics = new Analytics("1002", quantAnalytics2, qualAnalytics2);
-        analytics.add(student2Analytics);
+                    List<AnalyticsFieldDTO> qualAnalytics = studentAnalytics.stream()
+                            .filter(a -> {
+                                AnalyticsConfig config = configMap.get(a.getAnalyticId());
+                                return config != null && "qualitative".equalsIgnoreCase(config.getType());
+                            })
+                            .map(a -> {
+                                AnalyticsConfig config = configMap.get(a.getAnalyticId());
+                                return new AnalyticsFieldDTO(config.getName(), a.getValue());
+                            })
+                            .collect(Collectors.toList());
 
-        return analytics;
+                    return new AnalyticsResponseDTO(studentId, quantAnalytics, qualAnalytics);
+                })
+                .collect(Collectors.toList());
+
+        logger.info("Analytics fetched for activityID {}: {}", activityId, response);
+        return response;
     }
 }
