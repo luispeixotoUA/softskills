@@ -6,8 +6,10 @@ import com.softskills.softskills.model.AnalyticsListDTO;
 import com.softskills.softskills.model.DTO.AnalyticsFieldDTO;
 import com.softskills.softskills.model.DTO.AnalyticsResponseDTO;
 import com.softskills.softskills.repositories.AnalyticsConfigRepository;
-import com.softskills.softskills.repositories.AnalyticsDataRepository;
 import com.softskills.softskills.repositories.AnalyticsRepository;
+import com.softskills.softskills.strategy.AnalyticsStrategy;
+import com.softskills.softskills.strategy.impl.QualitativeAnalyticsStrategy;
+import com.softskills.softskills.strategy.impl.QuantitativeAnalyticsStrategy;
 import com.softskills.softskills.utils.AnalyticsCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,29 +20,29 @@ import java.util.stream.Collectors;
 
 @Service
 public class AnalyticsService {
-
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsService.class);
 
     private final AnalyticsCache analyticsCache;
     private final AnalyticsRepository analyticsRepository;
     private final AnalyticsConfigRepository analyticsConfigRepository;
+    private final Map<String, AnalyticsStrategy> strategies;
 
-    public AnalyticsService(AnalyticsCache analyticsCache, AnalyticsRepository analyticsRepository, AnalyticsConfigRepository analyticsConfigRepository) {
+    public AnalyticsService(AnalyticsCache analyticsCache,
+                            AnalyticsRepository analyticsRepository,
+                            AnalyticsConfigRepository analyticsConfigRepository) {
         this.analyticsCache = analyticsCache;
         this.analyticsRepository = analyticsRepository;
         this.analyticsConfigRepository = analyticsConfigRepository;
+
+        // Inicializa as estratégias
+        this.strategies = new HashMap<>();
+        strategies.put("quantitative", new QuantitativeAnalyticsStrategy());
+        strategies.put("qualitative", new QualitativeAnalyticsStrategy());
     }
 
     public Map<String, List<AnalyticsListDTO>> getAnalyticsList() {
         logger.info("Fetching analytics list from cache...");
-        Map<String, List<AnalyticsListDTO>> analyticsList = analyticsCache.getAnalyticsList()
-                .entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue().stream()
-                                .map(map -> new AnalyticsListDTO(map.getName(), map.getType()))
-                                .collect(Collectors.toList())
-                ));
+        Map<String, List<AnalyticsListDTO>> analyticsList = analyticsCache.getAnalyticsList();
         logger.info("Analytics list fetched: {}", analyticsList);
         return analyticsList;
     }
@@ -67,27 +69,10 @@ public class AnalyticsService {
                     String studentId = entry.getKey();
                     List<Analytics> studentAnalytics = entry.getValue();
 
-                    List<AnalyticsFieldDTO> quantAnalytics = studentAnalytics.stream()
-                            .filter(a -> {
-                                AnalyticsConfig config = configMap.get(a.getAnalyticId());
-                                return config != null && "quantitative".equalsIgnoreCase(config.getType());
-                            })
-                            .map(a -> {
-                                AnalyticsConfig config = configMap.get(a.getAnalyticId());
-                                return new AnalyticsFieldDTO(config.getName(), a.getValue());
-                            })
-                            .collect(Collectors.toList());
-
-                    List<AnalyticsFieldDTO> qualAnalytics = studentAnalytics.stream()
-                            .filter(a -> {
-                                AnalyticsConfig config = configMap.get(a.getAnalyticId());
-                                return config != null && "qualitative".equalsIgnoreCase(config.getType());
-                            })
-                            .map(a -> {
-                                AnalyticsConfig config = configMap.get(a.getAnalyticId());
-                                return new AnalyticsFieldDTO(config.getName(), a.getValue());
-                            })
-                            .collect(Collectors.toList());
+                    List<AnalyticsFieldDTO> quantAnalytics = strategies.get("quantitative")
+                            .processAnalytics(studentAnalytics, configMap);
+                    List<AnalyticsFieldDTO> qualAnalytics = strategies.get("qualitative")
+                            .processAnalytics(studentAnalytics, configMap);
 
                     return new AnalyticsResponseDTO(studentId, quantAnalytics, qualAnalytics);
                 })

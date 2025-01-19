@@ -1,7 +1,6 @@
 package com.softskills.softskills.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "analytics_data")
